@@ -54,7 +54,7 @@ data "aws_ami" "fck_nat" {
 resource "aws_instance" "fck_nat" {
   lifecycle {
     ignore_changes = [
-      ami
+      ami # avoid rebuilding instance by accident if they release new AMI
     ]
   }
   ami           = data.aws_ami.fck_nat.image_id

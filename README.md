@@ -1,4 +1,7 @@
-Why not, after all I link my github in my CV, I'd like to prove that even if I don't know the proper attributes of ami data block of the top of my head, I'm pretty familiar with it
+Why not, after all I link my github in my CV, I'd like to prove that even if I don't know the proper attributes of ami data block of the top of my head, I'm pretty familiar with it. The assumtion is that you have credentials configured either with aws CLI or in env.
+
+### swap-key.sh
+Yeee this is a public facing repo, I'd like to not leak the access key by accident, so this is a simple bash script to replace the credentials in local `~/.aws/credentials`
 
 ### networking
 Setup VPC, cheap NAT (shoutout AndrewGuenther/fck-nat) and openvpn. You control VPC CIDR, how many subnets to create, whether to force them into one AZ (cheaper traffic) and if you want to set the VPN address, you get SSH keys to instances, networking and VPN based on OpenVPN marketplace AMI.
