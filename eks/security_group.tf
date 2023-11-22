@@ -12,6 +12,6 @@ resource "aws_security_group" "extra_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [data.data.terraform_remote_state.networking.outputs.vpc_cidr]
+    cidr_blocks = [data.terraform_remote_state.networking.outputs.vpc_cidr]
   }
 }

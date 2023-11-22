@@ -18,4 +18,4 @@ When you want to delete the cluster, first run `terraform state rm local_file.ku
 
 I use self managed instance groups, they typically operate faster than eks managed
 
-Overall for now creating this successfully with terraform is 50/50. Those operations will create some cluster, some nodes and some plugins, but fine touches will be needed to make it operable. Top culprits are VPC CNI and coredns
+The version mismatch is a touchy subject

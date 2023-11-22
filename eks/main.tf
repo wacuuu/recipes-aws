@@ -5,7 +5,7 @@ module "eks" {
   version = "~> 19.0"
 
   cluster_name    = "test-cluster"
-  cluster_version = "1.26"
+  cluster_version = "1.28"
 
   cluster_endpoint_public_access        = false
   cluster_additional_security_group_ids = [aws_security_group.extra_sg.id]
