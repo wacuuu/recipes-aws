@@ -25,3 +25,5 @@ Setup VPC, cheap NAT (shoutout AndrewGuenther/fck-nat) and openvpn. You control 
 | <a name="output_vpn_password"></a> [vpn\_password](#output\_vpn\_password) | Password generated for VPN admin |
 | <a name="output_vpn_webui"></a> [vpn\_webui](#output\_vpn\_webui) | Address to VPN admin panel |
 
+### eks
+A happy attempt to set up EKS cluster.
