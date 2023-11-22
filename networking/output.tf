@@ -18,3 +18,12 @@ output "vpn_instance_pem_path" {
   description = "Path to fck nat instance key"
   value       = "${path.cwd}/${local_file.vpn_instance.filename}"
 }
+output "vpc_id" {
+  value = aws_vpc.vpc.id
+}
+output "private_subnets" {
+  value = slice(aws_subnet.subnet, 0, 6)
+}
+output "vpc_cidr" {
+  value = aws_vpc.vpc.cidr_block
+}

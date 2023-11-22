@@ -5,13 +5,13 @@ variable "vpc_cidr" {
 }
 variable "number_of_subnets" {
   type        = number
-  description = "Number of subnets to create in the VPC, the last one will be public"
+  description = "Number of subnets to create in the VPC, the last one will be public, with autoassigned public ips"
   default     = 8
 }
 variable "force_one_zone" {
   type        = bool
   description = "If true, all subnets will by default force instances to live in single AZ. Useful to cut cost"
-  default     = true
+  default     = false
 }
 variable "vpn_url" {
   type        = string
