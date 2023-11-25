@@ -19,6 +19,11 @@ resource "aws_subnet" "subnet" {
   cidr_block              = cidrsubnet(var.vpc_cidr, var.number_of_subnets, count.index)
   availability_zone       = var.force_one_zone ? data.aws_availability_zones.zones.names[0] : data.aws_availability_zones.zones.names[count.index % length(data.aws_availability_zones.zones.names)]
   map_public_ip_on_launch = count.index == var.number_of_subnets - 1 ? true : false
+  tags = {
+    "${count.index == var.number_of_subnets - 1 ? "kubernetes.io/role/elb" : "kubernetes.io/role/internal-elb"}" = "1"
+
+    "kubernetes.io/cluster/test-cluster" = "shared" # yee chicken and egg
+  }
 }
 
 resource "aws_internet_gateway" "gw" {

@@ -13,6 +13,7 @@ data "template_file" "kubeconfig" {
     cluster_auth_base64 = data.aws_eks_cluster.cluster.certificate_authority[0].data
     kubeconfig_name     = module.eks.cluster_name
     token               = data.aws_eks_cluster_auth.cluster.token
+    cluster_name        = module.eks.cluster_name
   }
 }
 

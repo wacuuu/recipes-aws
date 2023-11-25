@@ -1,0 +1,12 @@
+controller:
+  serviceAccount:
+    create: true
+    name: ebs-driver-controller
+    annotations:
+      eks.amazonaws.com/role-arn: ${role_arn}
+node:
+  serviceAccount:
+    create: true
+    name: ebs-driver-node
+    annotations:
+      eks.amazonaws.com/role-arn: ${role_arn}

@@ -26,4 +26,13 @@ Setup VPC, cheap NAT (shoutout AndrewGuenther/fck-nat) and openvpn. You control 
 | <a name="output_vpn_webui"></a> [vpn\_webui](#output\_vpn\_webui) | Address to VPN admin panel |
 
 ### eks
-A happy attempt to set up EKS cluster.
+A happy attempt to set up EKS cluster. It will build the cluster with a self managed node group using the official module.
+
+### eks-cluster-config
+Configure supporting services that would technically work only on EKS.
+
+### cluster-config
+Configure supporting services that would technically work on any cluster running in AWS (like kOps)
+
+### an-app
+A helmchart that can be deployed for testing purposes
