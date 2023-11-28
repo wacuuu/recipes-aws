@@ -21,12 +21,12 @@ output "vpn_instance_pem_path" {
 output "vpc_id" {
   value = aws_vpc.vpc.id
 }
-output "private_subnets" {
-  value = slice(aws_subnet.subnet, 0, 6)
-}
-output "public_subnets" {
-  value = aws_subnet.subnet[var.number_of_subnets - 1]
-}
+# output "private_subnets" {
+#   value = slice(aws_subnet.subnet, 0, var.number_of_subnets - 2)
+# }
+# output "public_subnets" {
+#   value = aws_subnet.subnet[var.number_of_subnets - 1]
+# }
 output "vpc_cidr" {
   value = aws_vpc.vpc.cidr_block
 }
