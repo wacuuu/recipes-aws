@@ -36,3 +36,7 @@ Configure supporting services that would technically work on any cluster running
 
 ### an-app
 A helmchart that can be deployed for testing purposes
+
+### cloudwatch-slack-notifications
+https://docs.aws.amazon.com/lambda/latest/dg/with-sns.html
+https://stackoverflow.com/questions/52379697/what-is-in-the-json-payload-cloudwatch-sends-to-sns-how-can-i-read-that-data

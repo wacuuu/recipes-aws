@@ -18,3 +18,8 @@ variable "vpn_url" {
   description = "If set, will be passed to VPN to set as VPN address"
   default     = ""
 }
+variable "create_instance" {
+  type        = number
+  default     = 1
+  description = "Create an instance in private subnet"
+}

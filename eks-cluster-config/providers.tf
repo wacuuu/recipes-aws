@@ -12,3 +12,10 @@ provider "helm" {
     config_path = "../eks/kubeconfig.yaml"
   }
 }
+provider "aws" {
+  default_tags {
+    tags = {
+      Component = "cluster-config"
+    }
+  }
+}
