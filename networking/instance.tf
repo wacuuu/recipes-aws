@@ -44,6 +44,10 @@ data "aws_ami" "instance" {
     name   = "architecture"
     values = ["x86_64"]
   }
+  filter {
+    name   = "owner-alias"
+    values = ["amazon"]
+  }
   most_recent = true
 }
 
@@ -64,18 +68,3 @@ resource "aws_instance" "instance" {
     volume_size = 32
   }
 }
-
-# data "terraform_remote_state" "monitoring" {
-#   backend = "local"
-#   config = {
-#     path = "${path.module}/../cloudwatch-slack-notifications/terraform.tfstate"
-#   }
-# }
-
-# module "instance_monitoring" {
-#   for_each      = { for instance in aws_instance.instance : instance.id => instance }
-#   source        = "../monitoring-modules/instance-metrics"
-#   instance_id   = each.key
-#   sns_topic_arn = data.terraform_remote_state.monitoring.outputs.sns_topic_arn
-# }
-

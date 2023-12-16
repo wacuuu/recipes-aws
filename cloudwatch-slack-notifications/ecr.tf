@@ -44,6 +44,7 @@ resource "null_resource" "build_and_push" {
   provisioner "local-exec" {
     working_dir = "./notifier"
     command     = <<EOF
+        set -x
         alias docker=podman
         export IMAGE_TAG="${aws_ecr_repository.notifier.repository_url}:${random_string.random.result}"
         docker build -t $IMAGE_TAG .
@@ -54,4 +55,3 @@ resource "null_resource" "build_and_push" {
 }
 
 
-# aws ecr get-login-password | docker login --username AWS --password-stdin 111122223333.dkr.ecr.us-east-1.amazonaws.com

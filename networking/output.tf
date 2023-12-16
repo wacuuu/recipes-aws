@@ -21,12 +21,15 @@ output "vpn_instance_pem_path" {
 output "vpc_id" {
   value = aws_vpc.vpc.id
 }
-# output "private_subnets" {
-#   value = slice(aws_subnet.subnet, 0, var.number_of_subnets - 2)
-# }
-# output "public_subnets" {
-#   value = aws_subnet.subnet[var.number_of_subnets - 1]
-# }
+output "private_subnets" {
+  value = slice(aws_subnet.subnet, 0, var.number_of_subnets - 2).*.id
+}
+output "public_subnets" {
+  value = aws_subnet.subnet[var.number_of_subnets - 1].id
+}
 output "vpc_cidr" {
   value = aws_vpc.vpc.cidr_block
+}
+output "instances_to_monitor_id" {
+  value = concat(aws_instance.instance.*.id, [aws_instance.vpn_instance.id, aws_instance.fck_nat.id])
 }

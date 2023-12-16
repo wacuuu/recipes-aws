@@ -23,8 +23,8 @@ module "eks" {
   }
 
   vpc_id                   = data.terraform_remote_state.networking.outputs.vpc_id
-  subnet_ids               = data.terraform_remote_state.networking.outputs.private_subnets.*.id
-  control_plane_subnet_ids = data.terraform_remote_state.networking.outputs.private_subnets.*.id
+  subnet_ids               = data.terraform_remote_state.networking.outputs.private_subnets
+  control_plane_subnet_ids = data.terraform_remote_state.networking.outputs.private_subnets
 
   self_managed_node_group_defaults = {
     bootstrap_extra_args                   = "--use-max-pods false --kubelet-extra-args '--max-pods=110'"
