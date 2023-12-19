@@ -19,17 +19,27 @@ output "vpn_instance_pem_path" {
   value       = "${path.cwd}/${local_file.vpn_instance.filename}"
 }
 output "vpc_id" {
-  value = aws_vpc.vpc.id
+  description = "ID of created VPC"
+  value       = aws_vpc.vpc.id
 }
 output "private_subnets" {
-  value = slice(aws_subnet.subnet, 0, var.number_of_subnets - 2).*.id
+  description = "List of private subnets ids"
+  value       = slice(aws_subnet.subnet, 0, var.number_of_subnets - 2).*.id
 }
 output "public_subnets" {
-  value = aws_subnet.subnet[var.number_of_subnets - 1].id
+  description = "Public subnet ID"
+  value       = aws_subnet.subnet[var.number_of_subnets - 1].id
 }
 output "vpc_cidr" {
-  value = aws_vpc.vpc.cidr_block
+  description = "CIDR of created VPC"
+  value       = aws_vpc.vpc.cidr_block
 }
 output "instances_to_monitor_id" {
-  value = concat(aws_instance.instance.*.id, [aws_instance.vpn_instance.id, aws_instance.fck_nat.id])
+  description = "List of instances to create for the sake of monitoring"
+  value       = concat(aws_instance.instance.*.id, [aws_instance.vpn_instance.id, aws_instance.fck_nat.id])
+}
+
+output "instances_ips" {
+  description = "IPS of instances created in vpcs"
+  value       = var.create_instance > 0 ? aws_instance.instance.*.private_ip : [""]
 }

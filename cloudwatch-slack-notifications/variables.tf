@@ -1,8 +1,10 @@
 variable "name" {
-  default = "alert-notifier"
+  description = "Base name used for few things, like ecr repo, lambda or SNS"
+  default     = "alert-notifier"
 }
 
 variable "slack_hook" {
-  type     = string
-  nullable = false
+  description = "Slack webhook to push messages to"
+  type        = string
+  nullable    = false
 }

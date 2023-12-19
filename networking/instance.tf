@@ -14,6 +14,7 @@ resource "local_file" "instance" {
   file_permission = "0600"
 }
 
+# Some desc
 resource "aws_security_group" "instance" {
   name   = "instance"
   vpc_id = aws_vpc.vpc.id
@@ -38,7 +39,7 @@ data "aws_ami" "instance" {
   owners = ["099720109477"]
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20230919"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
   filter {
     name   = "architecture"

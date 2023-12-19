@@ -21,5 +21,5 @@ variable "vpn_url" {
 variable "create_instance" {
   type        = number
   default     = 1
-  description = "Create an instance in private subnet"
+  description = "Create number of instances in private subnet"
 }
