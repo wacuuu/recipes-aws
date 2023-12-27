@@ -20,6 +20,17 @@ variable "vpn_url" {
 }
 variable "create_instance" {
   type        = number
-  default     = 1
+  default     = 0
   description = "Create number of instances in private subnet"
+}
+variable "create_devbox" {
+  type        = bool
+  default     = true
+  description = "Whether to create and configure devbox"
+}
+
+variable "devbox_type" {
+  type        = string
+  default     = "t3.medium"
+  description = "Size of devbox to create"
 }

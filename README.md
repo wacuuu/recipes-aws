@@ -4,13 +4,15 @@ Why not, after all I link my github in my CV, I'd like to prove that even if I d
 Yeee this is a public facing repo, I'd like to not leak the access key by accident, so this is a simple bash script to replace the credentials in local `~/.aws/credentials`
 
 ### networking
-Setup VPC, cheap NAT (shoutout AndrewGuenther/fck-nat) and openvpn. You control VPC CIDR, how many subnets to create, whether to force them into one AZ (cheaper traffic) and if you want to set the VPN address, you get SSH keys to instances, networking and VPN based on OpenVPN marketplace AMI.
+Setup VPC, cheap NAT (shoutout AndrewGuenther/fck-nat) and openvpn. You control VPC CIDR, how many subnets to create, whether to force them into one AZ (cheaper traffic) and if you want to set the VPN address, you get SSH keys to instances, networking and VPN based on OpenVPN marketplace AMI. Also it contains ansible stuff. Say you need a devbox with some of the tools you can connect to with vscode/ssh and use as a sortof swiss army knife. So now there is option to create a devbox instance and then you can go and manually run ansible once it is up.  `ansible-playbook -i devbox devbox.yaml -v`. Tested against the Paris and garbage internet, takes around 11 minutes. Also, there is a thing in ansible to run some basic config on all instances created via `create_instance` variable. `ansible-playbook -i instances host.yaml -v`
 
 #### Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_create_instance"></a> [create\_instance](#input\_create\_instance) | Create number of instances in private subnet | `number` | `1` | no |
+| <a name="input_create_devbox"></a> [create\_devbox](#input\_create\_devbox) | Whether to create and configure devbox | `bool` | `true` | no |
+| <a name="input_create_instance"></a> [create\_instance](#input\_create\_instance) | Create number of instances in private subnet | `number` | `3` | no |
+| <a name="input_devbox_type"></a> [devbox\_type](#input\_devbox\_type) | Size of devbox to create | `string` | `"t3.medium"` | no |
 | <a name="input_force_one_zone"></a> [force\_one\_zone](#input\_force\_one\_zone) | If true, all subnets will by default force instances to live in single AZ. Useful to cut cost | `bool` | `false` | no |
 | <a name="input_number_of_subnets"></a> [number\_of\_subnets](#input\_number\_of\_subnets) | Number of subnets to create in the VPC, the last one will be public, with autoassigned public ips | `number` | `8` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR of VPC to be created in the format x.x.x.x/x | `string` | `"10.0.0.0/16"` | no |
@@ -20,14 +22,14 @@ Setup VPC, cheap NAT (shoutout AndrewGuenther/fck-nat) and openvpn. You control 
 
 | Name | Description |
 |------|-------------|
-| <a name="output_fck_pem_path"></a> [fck\_pem\_path](#output\_fck\_pem\_path) | Path to fck nat instance key |
+| <a name="output_devbox_ip"></a> [devbox\_ip](#output\_devbox\_ip) | IP of devbox that can be configured with ansible |
+| <a name="output_devbox_pem_path"></a> [devbox\_pem\_path](#output\_devbox\_pem\_path) | Path to devbox instance key |
 | <a name="output_instances_ips"></a> [instances\_ips](#output\_instances\_ips) | IPS of instances created in vpcs |
 | <a name="output_instances_to_monitor_id"></a> [instances\_to\_monitor\_id](#output\_instances\_to\_monitor\_id) | List of instances to create for the sake of monitoring |
 | <a name="output_private_subnets"></a> [private\_subnets](#output\_private\_subnets) | List of private subnets ids |
 | <a name="output_public_subnets"></a> [public\_subnets](#output\_public\_subnets) | Public subnet ID |
 | <a name="output_vpc_cidr"></a> [vpc\_cidr](#output\_vpc\_cidr) | CIDR of created VPC |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | ID of created VPC |
-| <a name="output_vpn_instance_pem_path"></a> [vpn\_instance\_pem\_path](#output\_vpn\_instance\_pem\_path) | Path to fck nat instance key |
 | <a name="output_vpn_ip"></a> [vpn\_ip](#output\_vpn\_ip) | VPN instance IP |
 | <a name="output_vpn_password"></a> [vpn\_password](#output\_vpn\_password) | Password generated for VPN admin |
 | <a name="output_vpn_webui"></a> [vpn\_webui](#output\_vpn\_webui) | Address to VPN admin panel |

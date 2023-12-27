@@ -10,14 +10,6 @@ output "vpn_webui" {
   description = "Address to VPN admin panel"
   value       = "https://${length(var.vpn_url) > 0 ? var.vpn_url : aws_instance.vpn_instance.public_ip}:943/admin"
 }
-output "fck_pem_path" {
-  description = "Path to fck nat instance key"
-  value       = "${path.cwd}/${local_file.fck_nat_key.filename}"
-}
-output "vpn_instance_pem_path" {
-  description = "Path to fck nat instance key"
-  value       = "${path.cwd}/${local_file.vpn_instance.filename}"
-}
 output "vpc_id" {
   description = "ID of created VPC"
   value       = aws_vpc.vpc.id
@@ -42,4 +34,12 @@ output "instances_to_monitor_id" {
 output "instances_ips" {
   description = "IPS of instances created in vpcs"
   value       = var.create_instance > 0 ? aws_instance.instance.*.private_ip : [""]
+}
+output "devbox_ip" {
+  description = "IP of devbox that can be configured with ansible"
+  value       = aws_instance.devbox[0].private_ip
+}
+output "devbox_pem_path" {
+  description = "Path to devbox instance key"
+  value       = "${path.cwd}/${local_file.devbox.filename}"
 }

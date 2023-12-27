@@ -1,22 +1,22 @@
-resource "tls_private_key" "instance" {
+resource "tls_private_key" "devbox" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-resource "aws_key_pair" "instance" {
-  key_name   = "instance"
-  public_key = tls_private_key.instance.public_key_openssh
+resource "aws_key_pair" "devbox" {
+  key_name   = "devbox"
+  public_key = tls_private_key.devbox.public_key_openssh
 }
 
-resource "local_file" "instance" {
-  content         = tls_private_key.instance.private_key_pem
-  filename        = "instance.pem"
+resource "local_file" "devbox" {
+  content         = tls_private_key.devbox.private_key_pem
+  filename        = "devbox.pem"
   file_permission = "0600"
 }
 
 # Some desc
-resource "aws_security_group" "instance" {
-  name   = "instance"
+resource "aws_security_group" "devbox" {
+  name   = "devbox"
   vpc_id = aws_vpc.vpc.id
   egress {
     from_port        = 0
@@ -35,7 +35,7 @@ resource "aws_security_group" "instance" {
 
 }
 
-data "aws_ami" "instance" {
+data "aws_ami" "devbox" {
   owners = ["099720109477"]
   filter {
     name   = "name"
@@ -52,36 +52,39 @@ data "aws_ami" "instance" {
   most_recent = true
 }
 
-resource "aws_instance" "instance" {
-  count = var.create_instance
+resource "aws_instance" "devbox" {
+  count = var.create_devbox ? 1 : 0
   lifecycle {
     ignore_changes = [
-      ami # avoid rebuilding instance by accident if they release new AMI
+      ami # avoid rebuilding devbox by accident if they release new AMI
     ]
   }
   instance_type               = "t3.medium"
-  ami                         = data.aws_ami.instance.image_id
+  ami                         = data.aws_ami.devbox.image_id
   subnet_id                   = aws_subnet.subnet[0].id
-  vpc_security_group_ids      = [aws_security_group.instance.id]
-  key_name                    = aws_key_pair.instance.key_name
+  vpc_security_group_ids      = [aws_security_group.devbox.id]
+  key_name                    = aws_key_pair.devbox.key_name
   associate_public_ip_address = false
   root_block_device {
     volume_size = 32
   }
+  tags = {
+    Component = "devbox"
+  }
 }
 
-# data "template_file" "instance_hosts" {
+# data "template_file" "devbox_hosts" {
 #   template = file("${path.module}/hosts.tpl")
 #   vars = {
-#     instance_ips = aws_instance.instance.*.private_ip
-#     key_path     = "${path.cwd}/${local_file.instance.filename}"
+#     instance_ips = aws_instance.devbox.*.private_ip
+#     key_path     = "${path.cwd}/${local_file.devbox.filename}"
 #   }
 # }
 
-resource "local_file" "instance_hosts" {
+resource "local_file" "devbox_hosts" {
   content = templatefile("${path.module}/hosts.tpl", {
-    instance_ips = aws_instance.instance.*.private_ip
-    key_path     = "${path.cwd}/${local_file.instance.filename}"
+    instance_ips = aws_instance.devbox.*.private_ip
+    key_path     = "${path.cwd}/${local_file.devbox.filename}"
   })
-  filename = "./ansible/instances"
+  filename = "./ansible/devbox"
 }

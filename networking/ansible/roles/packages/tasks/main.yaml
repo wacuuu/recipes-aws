@@ -1,0 +1,42 @@
+- name: Add key for terraform
+  become: true
+  apt_key:
+    url: "https://apt.releases.hashicorp.com/gpg"
+    keyring: "/usr/share/keyrings/hashicorp-archive-keyring.gpg"
+
+- name: Add terraform by url
+  become: true
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_facts['distribution_release'] }} main"
+    state: present
+    filename: "docker"
+
+- name: Install packages
+  become: true
+  apt:
+    name:
+      - terraform
+
+- name: Download aws cli
+  get_url:
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    dest: "/tmp/awscliv2.zip"
+
+- name: unpack aws cli
+  unarchive:
+    src: "/tmp/awscliv2.zip"
+    dest: "/tmp"
+
+- name: install aws cli
+  become: true
+  command: /tmp/aws/install --update
+
+- name: upload current aws keys to be usable on the machine
+  copy:
+    src: "{{ lookup('env', 'HOME') }}/.aws/"
+    dest: /home/ubuntu/.aws/
+
+- name: push also ssh keys
+  copy:
+    src: "{{ lookup('env', 'HOME') }}/.ssh/"
+    dest: /home/ubuntu/.ssh/
