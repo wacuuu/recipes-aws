@@ -68,6 +68,9 @@ resource "aws_instance" "instance" {
   root_block_device {
     volume_size = 32
   }
+  tags = {
+    Component = "instances"
+  }
 }
 
 # data "template_file" "instance_hosts" {

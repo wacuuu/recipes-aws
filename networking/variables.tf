@@ -31,6 +31,12 @@ variable "create_devbox" {
 
 variable "devbox_type" {
   type        = string
-  default     = "t3.medium"
+  default     = "t3.xlarge"
   description = "Size of devbox to create"
+}
+
+variable "number_of_public_subnets" {
+  default     = 3
+  type        = number
+  description = "Number of public networks to create"
 }

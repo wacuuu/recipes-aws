@@ -18,9 +18,9 @@ resource "aws_subnet" "subnet" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = cidrsubnet(var.vpc_cidr, var.number_of_subnets, count.index)
   availability_zone       = var.force_one_zone ? data.aws_availability_zones.zones.names[0] : data.aws_availability_zones.zones.names[count.index % length(data.aws_availability_zones.zones.names)]
-  map_public_ip_on_launch = count.index == var.number_of_subnets - 1 ? true : false
+  map_public_ip_on_launch = count.index >= var.number_of_subnets - var.number_of_public_subnets - 1 ? true : false
   tags = {
-    "${count.index == var.number_of_subnets - 1 ? "kubernetes.io/role/elb" : "kubernetes.io/role/internal-elb"}" = "1"
+    "${count.index == var.number_of_subnets - var.number_of_public_subnets - 1 ? "kubernetes.io/role/elb" : "kubernetes.io/role/internal-elb"}" = "1"
 
     "kubernetes.io/cluster/test-cluster" = "shared" # yee chicken and egg
   }
@@ -40,6 +40,7 @@ resource "aws_route_table" "default_public" {
 }
 
 resource "aws_route_table_association" "public_network" {
-  subnet_id      = aws_subnet.subnet[var.number_of_subnets - 1].id
+  for_each       = { for i in range(0, var.number_of_public_subnets) : i => slice(aws_subnet.subnet, var.number_of_subnets - var.number_of_public_subnets, var.number_of_subnets)[i] }
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.default_public.id
 }

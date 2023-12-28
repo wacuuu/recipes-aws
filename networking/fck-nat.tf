@@ -80,7 +80,7 @@ resource "aws_route_table" "fck_nat" {
 }
 
 resource "aws_route_table_association" "fck_nat" {
-  count          = var.number_of_subnets - 1
-  subnet_id      = aws_subnet.subnet[count.index].id
+  for_each       = { for i in range(0, var.number_of_subnets - var.number_of_public_subnets) : i => aws_subnet.subnet[i] }
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.fck_nat.id
 }

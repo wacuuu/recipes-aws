@@ -59,7 +59,7 @@ resource "aws_instance" "devbox" {
       ami # avoid rebuilding devbox by accident if they release new AMI
     ]
   }
-  instance_type               = "t3.medium"
+  instance_type               = var.devbox_type
   ami                         = data.aws_ami.devbox.image_id
   subnet_id                   = aws_subnet.subnet[0].id
   vpc_security_group_ids      = [aws_security_group.devbox.id]
