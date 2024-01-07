@@ -25,7 +25,7 @@ variable "create_instance" {
 }
 variable "create_devbox" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether to create and configure devbox"
 }
 

@@ -37,7 +37,7 @@ output "instances_ips" {
 }
 output "devbox_ip" {
   description = "IP of devbox that can be configured with ansible"
-  value       = aws_instance.devbox[0].private_ip
+  value       = length(aws_instance.devbox) > 0 ? aws_instance.devbox[0].private_ip : null
 }
 output "devbox_pem_path" {
   description = "Path to devbox instance key"

@@ -5,7 +5,7 @@ module "eks" {
   version = "19.20"
 
   cluster_name    = "test-cluster"
-  cluster_version = "1.28"
+  cluster_version = "1.27"
 
   cluster_endpoint_public_access        = false
   cluster_additional_security_group_ids = [aws_security_group.extra_sg.id]
@@ -15,10 +15,10 @@ module "eks" {
       addon_version = "v1.10.1-eksbuild.6"
     }
     kube-proxy = {
-      addon_version = "v1.28.2-eksbuild.2"
+      addon_version = "v1.27.6-eksbuild.2"
     }
     vpc-cni = {
-      addon_version = "v1.15.4-eksbuild.1"
+      addon_version = "v1.15.5-eksbuild.1"
     }
   }
 
