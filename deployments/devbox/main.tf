@@ -17,10 +17,11 @@ module "devbox" {
 }
 
 resource "local_file" "devbox_hosts" {
+  file_permission = 0664
   content = templatefile("../../ansible/hosts.tpl", {
     instance_ips = [module.devbox.instance_ip]
     key_path     = module.keypair.key_path
     username     = "ubuntu"
   })
-  filename = "../../ansible/devbox.hosts"
+  filename = "../../ansible/devbox-hosts.yaml"
 }
