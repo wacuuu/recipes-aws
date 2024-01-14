@@ -26,20 +26,3 @@ output "vpc_cidr" {
   description = "CIDR of created VPC"
   value       = aws_vpc.vpc.cidr_block
 }
-output "instances_to_monitor_id" {
-  description = "List of instances to create for the sake of monitoring"
-  value       = concat(aws_instance.instance.*.id, [aws_instance.vpn_instance.id, aws_instance.fck_nat.id])
-}
-
-output "instances_ips" {
-  description = "IPS of instances created in vpcs"
-  value       = var.create_instance > 0 ? aws_instance.instance.*.private_ip : [""]
-}
-output "devbox_ip" {
-  description = "IP of devbox that can be configured with ansible"
-  value       = length(aws_instance.devbox) > 0 ? aws_instance.devbox[0].private_ip : null
-}
-output "devbox_pem_path" {
-  description = "Path to devbox instance key"
-  value       = "${path.cwd}/${local_file.devbox.filename}"
-}

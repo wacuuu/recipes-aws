@@ -9,7 +9,7 @@ terraform {
 provider "aws" {
   default_tags {
     tags = {
-      Component = "networking"
+      Component = "devbox"
     }
   }
 }

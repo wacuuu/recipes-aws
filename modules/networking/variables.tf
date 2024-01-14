@@ -18,22 +18,6 @@ variable "vpn_url" {
   description = "If set, will be passed to VPN to set as VPN address"
   default     = ""
 }
-variable "create_instance" {
-  type        = number
-  default     = 0
-  description = "Create number of instances in private subnet"
-}
-variable "create_devbox" {
-  type        = bool
-  default     = false
-  description = "Whether to create and configure devbox"
-}
-
-variable "devbox_type" {
-  type        = string
-  default     = "t3.xlarge"
-  description = "Size of devbox to create"
-}
 
 variable "number_of_public_subnets" {
   default     = 3

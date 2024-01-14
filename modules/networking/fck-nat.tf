@@ -22,20 +22,9 @@ resource "aws_network_interface" "fck_nat" {
   security_groups   = [aws_security_group.fck_nat.id]
 }
 
-resource "tls_private_key" "fck_nat_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "fck_nat_key" {
-  key_name   = "fck-nat"
-  public_key = tls_private_key.fck_nat_key.public_key_openssh
-}
-
-resource "local_file" "fck_nat_key" {
-  content         = tls_private_key.fck_nat_key.private_key_pem
-  filename        = "fck-nat.pem"
-  file_permission = "0600"
+module "fck_nat_key" {
+  source = "../instance_keypair"
+  name   = "fck-nat"
 }
 
 data "aws_ami" "fck_nat" {
@@ -59,7 +48,7 @@ resource "aws_instance" "fck_nat" {
   }
   ami           = data.aws_ami.fck_nat.image_id
   instance_type = "t4g.nano"
-  key_name      = aws_key_pair.fck_nat_key.key_name
+  key_name      = module.fck_nat_key.key_name
 
   network_interface {
     network_interface_id = aws_network_interface.fck_nat.id

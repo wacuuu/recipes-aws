@@ -3,6 +3,4 @@
 **/\.terraform*
 eks/kubeconfig.yaml
 **/secret.tfvars
-networking/ansible/hosts
-networking/ansible/devbox
-networking/ansible/instances
+**/*hosts

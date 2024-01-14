@@ -1,17 +1,6 @@
-resource "tls_private_key" "vpn_instance" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "vpn_instance" {
-  key_name   = "vpn"
-  public_key = tls_private_key.vpn_instance.public_key_openssh
-}
-
-resource "local_file" "vpn_instance" {
-  content         = tls_private_key.vpn_instance.private_key_pem
-  filename        = "vpn.pem"
-  file_permission = "0600"
+module "vpn_key" {
+  source = "../instance_keypair"
+  name   = "vpn-key"
 }
 
 locals {
@@ -68,7 +57,7 @@ resource "aws_instance" "vpn_instance" {
   ami                         = data.aws_ami.vpn.image_id
   subnet_id                   = aws_subnet.subnet[var.number_of_subnets - 1].id
   vpc_security_group_ids      = [aws_security_group.vpn.id]
-  key_name                    = aws_key_pair.vpn_instance.key_name
+  key_name                    = module.vpn_key.key_name
   associate_public_ip_address = true
   root_block_device {
     volume_size = 8
