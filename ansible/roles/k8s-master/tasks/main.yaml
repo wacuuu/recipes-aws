@@ -1,0 +1,21 @@
+- name: kubeadm init
+  become: true
+  ansible.builtin.command: "kubeadm init"
+  when: first_run
+
+- name: kubeadm get join string
+  become: true
+  ansible.builtin.command: "kubeadm token create  --print-join-command"
+  register: join_command
+
+- name: show join command
+  debug:
+    msg: "{{ join_command }}"
+
+- name: fetch kubeconf
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: admin.conf
+    flat: true
+  become: true
+  when: fetch_config

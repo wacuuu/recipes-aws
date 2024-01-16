@@ -1,0 +1,97 @@
+- name: Add key for kubernetes
+  become: true
+  apt_key:
+    url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key"
+    keyring: "/etc/apt/keyrings/kubernetes.gpg"
+
+- name: Add docker by url
+  become: true
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
+    state: present
+    filename: "kubernetes"
+
+- name: Install packages
+  become: true
+  apt:
+    name:
+      - containerd.io
+      - kubelet
+      - kubeadm
+      - kubectl
+
+- name: Prevent python from being upgraded
+  become: true
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - containerd.io
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: Download cni plugins
+  get_url:
+    url: "https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-arm-v1.4.0.tgz"
+    dest: "/tmp/cni-plugins.tgz"
+
+- name: ensure cni plugins dir
+  become: true
+  file:
+    path: /opt/cni/bin
+    state: directory
+
+- name: unpack cni plugins
+  become: true
+  unarchive:
+    src: "/tmp/cni-plugins.tgz"
+    remote_src: true
+    dest: "/opt/cni/bin"
+
+- name: Add br_netfilter
+  become: true
+  community.general.modprobe:
+    name: br_netfilter
+    state: present
+
+- name: ip forwarding
+  become: true
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: true
+
+- name: add containerd config
+  become: true
+  copy:
+    src: config.toml
+    dest: /etc/containerd/config.toml
+    mode: "0644"
+  register: containerd_config_changed
+
+- name: restart containerd
+  become: true
+  when: containerd_config_changed == true
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: containerd
+# wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+# mkdir -p /opt/cni/bin
+# tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz
+# modprobe br_netfilter
+# sysctl -w net.ipv4.ip_forward=1
+# echo "" > /etc/containerd/config.toml
+# cat <<EOF | tee /etc/containerd/config.toml
+# version = 2
+# [plugins]
+#   [plugins."io.containerd.grpc.v1.cri"]
+#    [plugins."io.containerd.grpc.v1.cri".containerd]
+#       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
+#         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+#           runtime_type = "io.containerd.runc.v2"
+#           [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+#             SystemdCgroup = true
+# EOF
+# systemctl restart containerd

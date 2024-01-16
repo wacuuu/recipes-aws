@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+    first_run: false
+    fetch_config: true
+  roles:
+    # - role: common
+    # - role: k8s-common
+    - role: k8s-master

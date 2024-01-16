@@ -1,6 +1,8 @@
+ansible/admin.conf
 **/*.pem
 **/*terraform.tfstate*
 **/\.terraform*
 eks/kubeconfig.yaml
 **/secret.tfvars
 **/*hosts
+**/*hosts.yaml
