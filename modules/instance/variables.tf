@@ -32,3 +32,15 @@ variable "root_size" {
   default = 32
 
 }
+
+variable "use_external_sg" {
+  default = false
+}
+
+variable "tags" {
+  default = {}
+}
+
+variable "volume_type" {
+  default = "gp3"
+}

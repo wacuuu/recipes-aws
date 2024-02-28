@@ -61,6 +61,7 @@ resource "aws_instance" "vpn_instance" {
   associate_public_ip_address = true
   root_block_device {
     volume_size = 8
+    volume_type = "gp3"
   }
   user_data = <<EOF
 ${length(var.vpn_url) > 0 ? "public_hostname= ${var.vpn_url}" : ""}

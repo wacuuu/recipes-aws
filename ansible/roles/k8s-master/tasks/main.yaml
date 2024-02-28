@@ -1,16 +1,12 @@
 - name: kubeadm init
   become: true
-  ansible.builtin.command: "kubeadm init"
+  ansible.builtin.command: "kubeadm init --pod-network-cidr 10.244.0.0/16"
   when: first_run
 
 - name: kubeadm get join string
   become: true
   ansible.builtin.command: "kubeadm token create  --print-join-command"
   register: join_command
-
-- name: show join command
-  debug:
-    msg: "{{ join_command }}"
 
 - name: fetch kubeconf
   fetch:
@@ -19,3 +15,8 @@
     flat: true
   become: true
   when: fetch_config
+
+- name: show join command
+  debug:
+    msg: "{{ join_command }}"
+  when: first_run

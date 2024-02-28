@@ -36,6 +36,7 @@
       - unzip
       - python3-pip
       - jq
+      - net-tools
 
 - name: install pip packages
   pip:
@@ -43,4 +44,4 @@
       - flask
       - uwsgi
       - requests
-# TODO: cri
+      - boto3

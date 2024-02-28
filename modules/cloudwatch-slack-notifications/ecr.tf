@@ -11,13 +11,13 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 data "local_file" "code" {
-  filename = "notifier/lambda_function.py"
+  filename = "${path.module}/notifier/lambda_function.py"
 }
 data "local_file" "deps" {
-  filename = "notifier/requirements.txt"
+  filename = "${path.module}/notifier/requirements.txt"
 }
 data "local_file" "dockerfile" {
-  filename = "notifier/Dockerfile"
+  filename = "${path.module}/notifier/Dockerfile"
 }
 
 resource "null_resource" "refresh_trigger" {
@@ -42,7 +42,7 @@ resource "null_resource" "build_and_push" {
     replace_triggered_by = [random_string.random]
   }
   provisioner "local-exec" {
-    working_dir = "./notifier"
+    working_dir = "${path.module}/notifier"
     command     = <<EOF
         set -x
         alias docker=podman

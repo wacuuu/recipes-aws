@@ -56,6 +56,7 @@ resource "aws_instance" "fck_nat" {
   }
   root_block_device {
     volume_size = 5
+    volume_type = "gp3"
   }
 }
 

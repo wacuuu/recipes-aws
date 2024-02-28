@@ -8,21 +8,53 @@ module "keypair" {
   name   = "kubeadm"
 }
 
+resource "aws_security_group" "this" {
+  name   = "common groupo"
+  vpc_id = module.networking.vpc_id
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  ingress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+
 module "master" {
-  source        = "../../modules/instance"
-  vpc_id        = module.networking.vpc_id
-  instance_name = "master"
-  key_name      = module.keypair.key_name
-  subnet_id     = module.networking.private_subnets[0]
+  source            = "../../modules/instance"
+  vpc_id            = module.networking.vpc_id
+  instance_name     = "master"
+  key_name          = module.keypair.key_name
+  subnet_id         = module.networking.private_subnets[0]
+  security_group_id = aws_security_group.this.id
+  use_external_sg   = true
+  tags = {
+    Name = "master-1"
+  }
+  root_size = 12
 }
 
 module "nodes" {
-  count         = 3
-  source        = "../../modules/instance"
-  vpc_id        = module.networking.vpc_id
-  instance_name = "node-${count.index}"
-  key_name      = module.keypair.key_name
-  subnet_id     = module.networking.private_subnets[0]
+  count             = 2
+  use_external_sg   = true
+  source            = "../../modules/instance"
+  vpc_id            = module.networking.vpc_id
+  instance_name     = "node-${count.index}"
+  key_name          = module.keypair.key_name
+  subnet_id         = module.networking.private_subnets[0]
+  security_group_id = aws_security_group.this.id
+  tags = {
+    Name = "node-${count.index}"
+  }
+  root_size = 12
 }
 
 resource "local_file" "master" {

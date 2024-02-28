@@ -1,0 +1,11 @@
+- name: Run join command
+  ansible.builtin.command:
+    argv:
+      - kubeadm
+      - join
+      - "{{ ip }}"
+      - --token
+      - "{{ token }}"
+      - --discovery-token-ca-cert-hash
+      - "{{ hash }}"
+  become: true

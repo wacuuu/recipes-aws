@@ -14,7 +14,7 @@ terraform apply --target local_file.kubeconfig
 ```
 aws auth related stuff fails implicitly.
 
-When you want to delete the cluster, first run `terraform state rm local_file.kubeconfig`, to avoid the same problem.
+When you want to delete the cluster, first run `terraform state rm local_file.kubeconfig`, to avoid the same problem. Also `terraform state rm module.eks.kubernetes_config_map.aws_auth[0]` and ` terraform state rm module.eks.kubernetes_config_map_v1_data.aws_auth[0]`
 
 I use self managed instance groups, they typically operate faster than eks managed
 

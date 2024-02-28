@@ -14,11 +14,12 @@
 - name: Install packages
   become: true
   apt:
+    allow_downgrade: true
     name:
-      - containerd.io
-      - kubelet
-      - kubeadm
-      - kubectl
+      - containerd.io=1.6.27-1
+      - kubelet=1.28.6-1.1
+      - kubeadm=1.28.6-1.1
+      - kubectl=1.28.6-1.1
 
 - name: Prevent python from being upgraded
   become: true
@@ -33,7 +34,7 @@
 
 - name: Download cni plugins
   get_url:
-    url: "https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-arm-v1.4.0.tgz"
+    url: "https://github.com/containernetworking/plugins/releases/download/v1.4.0/cni-plugins-linux-amd64-v1.4.0.tgz"
     dest: "/tmp/cni-plugins.tgz"
 
 - name: ensure cni plugins dir
@@ -72,26 +73,8 @@
 
 - name: restart containerd
   become: true
-  when: containerd_config_changed == true
-  ansible.builtin.systemd_service:
+  when: containerd_config_changed.changed
+  systemd:
     state: restarted
     daemon_reload: true
     name: containerd
-# wget https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
-# mkdir -p /opt/cni/bin
-# tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz
-# modprobe br_netfilter
-# sysctl -w net.ipv4.ip_forward=1
-# echo "" > /etc/containerd/config.toml
-# cat <<EOF | tee /etc/containerd/config.toml
-# version = 2
-# [plugins]
-#   [plugins."io.containerd.grpc.v1.cri"]
-#    [plugins."io.containerd.grpc.v1.cri".containerd]
-#       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
-#         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-#           runtime_type = "io.containerd.runc.v2"
-#           [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-#             SystemdCgroup = true
-# EOF
-# systemctl restart containerd

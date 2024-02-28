@@ -1,6 +1,6 @@
 
 resource "aws_security_group" "instance" {
-  count  = length(var.security_group_id) > 0 ? 0 : 1
+  count  = var.use_external_sg ? 0 : 1
   name   = var.instance_name
   vpc_id = var.vpc_id
   egress {
@@ -46,10 +46,12 @@ resource "aws_instance" "instance" {
   instance_type               = var.instance_type
   ami                         = length(var.ami_id) > 0 ? var.ami_id : data.aws_ami.instance[0].image_id
   subnet_id                   = var.subnet_id
-  vpc_security_group_ids      = [length(var.security_group_id) > 0 ? var.security_group_id : aws_security_group.instance[0].id]
+  vpc_security_group_ids      = [var.use_external_sg ? var.security_group_id : aws_security_group.instance[0].id]
   key_name                    = var.key_name
   associate_public_ip_address = var.public_ip
   root_block_device {
     volume_size = var.root_size
+    volume_type = var.volume_type
   }
+  tags = var.tags
 }
