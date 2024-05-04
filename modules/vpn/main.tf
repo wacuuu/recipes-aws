@@ -43,7 +43,7 @@ resource "aws_instance" "vpn_instance" {
   }
   instance_type               = "t3.micro"
   ami                         = var.vpn_ami
-  subnet_id                   = aws_subnet.subnet[var.number_of_subnets - 1].id
+  subnet_id                   = var.vpn_subnet
   vpc_security_group_ids      = [aws_security_group.vpn.id]
   key_name                    = module.vpn_key.key_name
   associate_public_ip_address = true

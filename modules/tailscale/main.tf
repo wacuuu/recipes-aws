@@ -42,12 +42,7 @@ resource "aws_security_group" "tailscale" {
 resource "aws_network_interface" "tailscale" {
   subnet_id         = var.tailscale_subnet
   source_dest_check = false
-  security_groups   = [aws_instance.tailscale.id]
-}
-
-resource "random_string" "tailscale_suffix" {
-  length  = 8
-  special = false
+  security_groups   = [aws_security_group.tailscale.id]
 }
 
 resource "aws_instance" "tailscale" {
@@ -61,10 +56,10 @@ resource "aws_instance" "tailscale" {
   ami           = data.aws_ami.ubuntu.image_id
   # subnet_id                   = module.test_cloud_network.subnet_ids[2]
   # vpc_security_group_ids      = [aws_security_group.test_cloud.id]
-  key_name = aws_key_pair.tailscale_key.key_name
+  key_name = module.tailscale_key.key_name
   # associate_public_ip_address = false
   network_interface {
-    network_interface_id = aws_network_interface.tailscale
+    network_interface_id = aws_network_interface.tailscale.id
     device_index         = 0
   }
   root_block_device {
@@ -84,7 +79,7 @@ apt-get -y install tailscale
 echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 sysctl -p /etc/sysctl.d/99-tailscale.conf
-tailscale up --auth-key=${var.tailscale_auth} --advertise-routes=${var.tailscale_cidr} --hostname=aws-router-${random_string.tailscale_suffix.result} --advertise-tags=tag:aws-network,tag:exit-node --reset --accept-routes --advertise-exit-node
+tailscale up --auth-key=${var.tailscale_auth} --advertise-routes=${var.tailscale_cidr} --hostname=aws-router-${var.tailscale_router_suffix} --advertise-tags=tag:aws-network,tag:exit-node,tag:aws-router-${var.tailscale_router_suffix} --reset --accept-routes --advertise-exit-node
 EOF
 }
 

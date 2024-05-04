@@ -9,6 +9,9 @@ variable "vpn_url" {
 variable "vpn_vpc_id" {
 
 }
-variable "number_of_subnets" {
+# variable "number_of_subnets" {
+
+# }
+variable "vpn_subnet" {
 
 }

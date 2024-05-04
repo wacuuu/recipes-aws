@@ -30,3 +30,6 @@ variable "use_tailscale" {
 variable "tailscale_auth" {
   default = ""
 }
+variable "tailscale_router_suffix" {
+  default = "default"
+}

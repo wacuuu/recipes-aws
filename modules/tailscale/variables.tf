@@ -10,3 +10,6 @@ variable "tailscale_auth" {
 variable "tailscale_cidr" {
 
 }
+variable "tailscale_router_suffix" {
+  default = "default"
+}
