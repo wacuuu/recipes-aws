@@ -1,15 +1,8 @@
 output "vpn_ip" {
   description = "VPN instance IP"
-  value       = aws_instance.vpn_instance.public_ip
+  value       = var.use_openvpn ? module.vpn.vpn_webui : null
 }
-output "vpn_password" {
-  description = "Password generated for VPN admin"
-  value       = random_string.vpn_password.result
-}
-output "vpn_webui" {
-  description = "Address to VPN panel"
-  value       = "https://${length(var.vpn_url) > 0 ? var.vpn_url : aws_instance.vpn_instance.public_ip}:943"
-}
+
 output "vpc_id" {
   description = "ID of created VPC"
   value       = aws_vpc.vpc.id

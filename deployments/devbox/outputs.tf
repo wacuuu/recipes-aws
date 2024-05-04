@@ -6,3 +6,6 @@ output "vpn_webui" {
   description = "Address to VPN panel"
   value       = module.networking.vpn_password
 }
+output "devbox_ip" {
+  value = module.devbox.instance_ip
+}
