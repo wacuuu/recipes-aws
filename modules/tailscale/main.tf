@@ -1,6 +1,14 @@
+locals {
+  hostname_suffix = length(var.tailscale_hostname_suffix) > 0 ? var.tailscale_hostname_suffix : var.tailscale_router_suffix
+}
+resource "random_string" "key_suffix" {
+  special = false
+  length  = 8
+}
+
 module "tailscale_key" {
   source = "../instance_keypair"
-  name   = "tailscale-key"
+  name   = "tailscale-key-${random_string.key_suffix.result}"
 }
 
 data "aws_ami" "ubuntu" {
@@ -79,7 +87,7 @@ apt-get -y install tailscale
 echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
 sysctl -p /etc/sysctl.d/99-tailscale.conf
-tailscale up --auth-key=${var.tailscale_auth} --advertise-routes=${var.tailscale_cidr} --hostname=aws-router-${var.tailscale_router_suffix} --advertise-tags=tag:aws-network,tag:exit-node,tag:aws-router-${var.tailscale_router_suffix} --reset --accept-routes --advertise-exit-node
+tailscale up --auth-key=${var.tailscale_auth} --advertise-routes=${var.tailscale_cidr} --hostname=aws-router-${local.hostname_suffix} --advertise-tags=tag:aws-network,tag:exit-node,tag:aws-router-${var.tailscale_router_suffix} --reset --accept-routes --advertise-exit-node
 EOF
 }
 

@@ -2,7 +2,6 @@ output "vpn_ip" {
   description = "VPN instance IP"
   value       = var.use_openvpn ? module.vpn.vpn_webui : null
 }
-
 output "vpc_id" {
   description = "ID of created VPC"
   value       = aws_vpc.vpc.id

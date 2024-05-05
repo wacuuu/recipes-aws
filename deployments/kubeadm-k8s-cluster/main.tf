@@ -1,8 +1,9 @@
 module "networking" {
   source                   = "../../modules/networking"
   number_of_public_subnets = 1
+  use_tailscale            = true
+  tailscale_auth           = var.tailscale_auth
 }
-
 module "keypair" {
   source = "../../modules/instance_keypair"
   name   = "kubeadm"
@@ -43,7 +44,7 @@ module "master" {
 }
 
 module "nodes" {
-  count             = 2
+  count             = 3
   use_external_sg   = true
   source            = "../../modules/instance"
   vpc_id            = module.networking.vpc_id

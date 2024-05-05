@@ -33,3 +33,6 @@ variable "tailscale_auth" {
 variable "tailscale_router_suffix" {
   default = "default"
 }
+variable "setup_nat" {
+  default = true
+}

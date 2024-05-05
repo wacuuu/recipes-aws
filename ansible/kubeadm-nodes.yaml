@@ -1,5 +1,7 @@
 ---
 - hosts: all
+  vars:
+    kub_version: "1.29.4-2.1"
   roles:
     - role: common
     - role: k8s-common

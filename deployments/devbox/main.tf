@@ -3,6 +3,8 @@ module "networking" {
   number_of_public_subnets = 1
   use_tailscale            = true
   tailscale_auth           = var.tailscale_auth
+  vpc_cidr                 = "10.1.0.0/16"
+  tailscale_router_suffix  = "devbox"
 }
 
 module "keypair" {
@@ -16,6 +18,9 @@ module "devbox" {
   instance_name = "devbox"
   key_name      = module.keypair.key_name
   subnet_id     = module.networking.private_subnets[0]
+  tags = {
+    Name = "devbox"
+  }
 }
 
 resource "local_file" "devbox_hosts" {

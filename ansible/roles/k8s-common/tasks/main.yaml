@@ -1,27 +1,30 @@
-- name: Add key for kubernetes
+- name: Add key for kubernetes 1.28
   become: true
   apt_key:
     url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key"
-    keyring: "/etc/apt/keyrings/kubernetes.gpg"
+    keyring: "/etc/apt/keyrings/kubernetes-1.28.gpg"
 
-- name: Add docker by url
+- name: Add key for kubernetes 1.29
+  become: true
+  apt_key:
+    url: "https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key"
+    keyring: "/etc/apt/keyrings/kubernetes-1.29.gpg"
+
+- name: Add kubernetes 1.28 by url
   become: true
   apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-1.28.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /"
     state: present
     filename: "kubernetes"
 
-- name: Install packages
+- name: Add kubernetes 1.29 by url
   become: true
-  apt:
-    allow_downgrade: true
-    name:
-      - containerd.io=1.6.27-1
-      - kubelet=1.28.6-1.1
-      - kubeadm=1.28.6-1.1
-      - kubectl=1.28.6-1.1
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-1.29.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
+    state: present
+    filename: "kubernetes"
 
-- name: Prevent python from being upgraded
+- name: Prevent packages from being upgraded
   become: true
   ansible.builtin.dpkg_selections:
     name: "{{ item }}"
@@ -31,6 +34,16 @@
     - kubelet
     - kubeadm
     - kubectl
+
+- name: Install packages
+  become: true
+  apt:
+    allow_downgrade: true
+    name:
+      - containerd.io=1.6.27-1
+      - "kubelet={{ kub_version }}"
+      - "kubeadm={{ kub_version }}"
+      - "kubectl={{ kub_version }}"
 
 - name: Download cni plugins
   get_url:

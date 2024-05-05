@@ -13,3 +13,6 @@ variable "tailscale_cidr" {
 variable "tailscale_router_suffix" {
   default = "default"
 }
+variable "tailscale_hostname_suffix" {
+  default = ""
+}

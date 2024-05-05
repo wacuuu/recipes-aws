@@ -3,7 +3,8 @@
   vars:
     first_run: false
     fetch_config: true
+    kub_version: "1.29.4-2.1"
   roles:
-    # - role: common
-    # - role: k8s-common
+    - role: common
+    - role: k8s-common
     - role: k8s-master
