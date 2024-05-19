@@ -1,5 +1,4 @@
 resource "aws_security_group" "fck_nat" {
-  count  = var.setup_nat ? 1 : 0
   name   = "fck-nat"
   vpc_id = aws_vpc.vpc.id
   egress {
@@ -18,26 +17,22 @@ resource "aws_security_group" "fck_nat" {
 }
 
 resource "aws_network_interface" "fck_nat" {
-  count             = var.setup_nat ? 1 : 0
   subnet_id         = aws_subnet.subnet[var.number_of_subnets - 1].id
   source_dest_check = false
   security_groups   = [aws_security_group.fck_nat.id]
 }
 
 resource "random_string" "key_suffix" {
-  count   = var.setup_nat ? 1 : 0
   special = false
   length  = 8
 }
 
 module "fck_nat_key" {
-  count  = var.setup_nat ? 1 : 0
   source = "../instance_keypair"
   name   = "fck-nat-${random_string.key_suffix.result}"
 }
 
 data "aws_ami" "fck_nat" {
-  count  = var.setup_nat ? 1 : 0
   owners = ["568608671756"]
   filter {
     name   = "name"
@@ -51,7 +46,6 @@ data "aws_ami" "fck_nat" {
 }
 
 resource "aws_instance" "fck_nat" {
-  count = var.setup_nat ? 1 : 0
   lifecycle {
     ignore_changes = [
       ami # avoid rebuilding instance by accident if they release new AMI
@@ -84,7 +78,6 @@ resource "aws_route_table" "fck_nat" {
 }
 
 resource "aws_route_table_association" "fck_nat" {
-  count          = var.setup_nat ? 1 : 0
   for_each       = { for i in range(0, var.number_of_subnets - var.number_of_public_subnets) : i => aws_subnet.subnet[i] }
   subnet_id      = each.value.id
   route_table_id = aws_route_table.fck_nat.id
