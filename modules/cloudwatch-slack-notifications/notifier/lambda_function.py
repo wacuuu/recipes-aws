@@ -14,12 +14,13 @@ def lambda_handler(event, context):
     webhook = WebhookClient(os.environ["SLACK_WEBHOOK"])
     for record in event["Records"]:
         if record["EventSource"] == "aws:sns":
+            notification = record["Sns"]
+            message = json.loads(notification['Message'])
             desc = message["AlarmDescription"]
             dims = message["Trigger"]["Dimensions"]
             l_status = message["OldStateValue"]
             message = json.loads(notification["Message"])
             name = message["AlarmName"]
-            notification = record["Sns"]
             stat_type = message["Trigger"]["Statistic"]
             status = message["NewStateValue"]
             subject = notification["Subject"]
